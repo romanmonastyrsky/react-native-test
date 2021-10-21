@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -19,15 +19,14 @@ const ListScreen = ({ navigation }) => {
   const isUpdating = useSelector((state) => state.data.isLoadingList)
 
   const [isUserCanUpdate, setIsUserCanUpdate] = useState(false);
-  const [timer, setTimer] = useState();
+  const timer = useRef(null);
 
   const startTimer = () => {
-    clearTimeout(timer);
+    clearTimeout(timer.current);
     const newTimer = setTimeout(() => {
       setIsUserCanUpdate(true);
     }, USER_UPDATE_TIME);
-    console.log(newTimer);
-    setTimer(newTimer);
+    timer.current = newTimer;
   }
 
   const updateList = () => {
@@ -45,7 +44,7 @@ const ListScreen = ({ navigation }) => {
 
       return () => {
         clearInterval(interval);
-        clearTimeout(timer);
+        clearTimeout(timer.current);
       };
     }, [])
   ) 
